@@ -141,3 +141,5 @@ venv.bak/
 *-env/
 
 *.ipynb
+
+resources/
