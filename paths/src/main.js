@@ -4,13 +4,14 @@ const mapZoom = 12;
 const stationsFile = '/resources/stations.csv';
 
 
+
 function initMap() {
     const options = {
         zoom: mapZoom,
         center: mapCenter
     };
 
-    map = new google.maps.Map(document.getElementById('map'), options);
+    googleMap = new google.maps.Map(document.getElementById('map'), options);
     // var styledMapType = new google.maps.StyledMapType(mapStyle);
     // map.mapTypes.set('styled_map', styledMapType);
     // map.setMapTypeId('styled_map');
@@ -20,7 +21,7 @@ function initMap() {
 function addMarker(loc, icon) {
     var marker = new google.maps.Marker({
         position: loc,
-        map: map,
+        map: googleMap,
         icon: icon
     });
     return marker
@@ -64,7 +65,7 @@ function geocode(e) {
                 var infowindow = new google.maps.InfoWindow({
                     content: 'You are here!'
                 });
-                infowindow.open(map, marker);
+                infowindow.open(googleMap, marker);
             });
 
             d3.queue()
@@ -107,7 +108,7 @@ function geocode(e) {
                                     var infowindow = new google.maps.InfoWindow({
                                         content: closestStation.name
                                     });
-                                    infowindow.open(map, marker);
+                                    infowindow.open(googleMap, marker);
                                 });
 
                             })

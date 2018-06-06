@@ -31,7 +31,7 @@ function initMap() {
         center: mapCenter,
         mapTypeId: mapStyle
     };
-    map = new google.maps.Map(document.getElementById('map'), options);
+    googleMap = new google.maps.Map(document.getElementById('map'), options);
 
     d3.queue()
         .defer(d3.csv, stationsFile)
@@ -52,7 +52,7 @@ function initMap() {
                     strokeWeight: 0,
                     fillColor: colorScaler(station.late),
                     fillOpacity: 0.7,
-                    map: map,
+                    map: googleMap,
                     center: station.coords,
                     position: station.coords,
                     radius: radioScaler(station.size),
@@ -62,8 +62,8 @@ function initMap() {
                     var infoWindow = new google.maps.InfoWindow({
                         content: station.name
                     });
-                    infoWindow.open(map, stationCircle);
-                })
+                    infoWindow.open(googleMap, stationCircle);
+                });
                 return stationCircle
             }
 
