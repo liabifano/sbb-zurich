@@ -10,7 +10,7 @@ module.exports = {
         inline: true,
         progress: true,
         contentBase: './src',
-        port: 8000
+        port: 8080
     },
     devtool: 'source-map',
     entry: [
@@ -42,7 +42,7 @@ module.exports = {
     plugins: [
         new ExtractTextPlugin({filename: 'main.css'}),
         new webpack.HotModuleReplacementPlugin(),
-        new OpenBrowserPlugin({ url: 'http://localhost:8000' }),
+        new OpenBrowserPlugin({ url: 'http://localhost:8080' }),
         new webpack.LoaderOptionsPlugin({
             options: {
                 sassLoader: {

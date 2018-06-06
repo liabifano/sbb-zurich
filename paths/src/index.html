@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SBB Zurich</title>
+
+    <link rel="stylesheet" href="main.css">
+
+</head>
+<body>
+    <div id="map"></div>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+    <script src=https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.3.0/math.min.js></script>
+
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDT4e9MVo7v_cvSq_7BArir8IE04riPI1k&callback=initMap">
+        // is this a way to hide it? https://stackoverflow.com/questions/1364858/what-steps-should-i-take-to-protect-my-google-maps-api-key
+    </script>
+
+    <div class="container">
+        <h2 id="text-center">Enter Location:</h2>
+        <form id="location-form">
+            <input type="text" id="location-input" class="form-control form-control-lg">
+            <br>
+            <button type="submit" class="btn btn-primary btn-block">Submit</button>
+        </form>
+
+    </div>
+    <script src="json.js"></script>
+    <script src="secrets.js"></script>
+    <script src="helpers.js"></script>
+    <script src="main.js"></script>
+
+
+</body>
+</html>

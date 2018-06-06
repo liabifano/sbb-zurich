@@ -24,33 +24,19 @@ function rowsConverterHour(d) {
     }
 }
 
+
 function initMap() {
     const options = {
         zoom: mapZoom,
         center: mapCenter,
         mapTypeId: mapStyle
     };
-    const map = new google.maps.Map(document.getElementById('map'), options);
-
-    // function addMarker(station){
-    //     const marker = new google.maps.Marker({
-    //         position: station.coords,
-    //         map: map,
-    //         content: station.name,
-    //         draggable: true
-    //     });
-    //
-    //     const infoWindow = new google.maps.InfoWindow({
-    //         content: station.name
-    //     });
-    //
-    // }
+    map = new google.maps.Map(document.getElementById('map'), options);
 
     d3.queue()
         .defer(d3.csv, stationsFile)
         .await(function (error, stations) {
             stations = stations.map(rowConverterStations);
-            console.log(stations)
 
             const max_trips_day = math.max.apply(Math, stations.map(x => x.size));
             const min_trips_day = math.min.apply(Math, stations.map(x => x.size));
@@ -61,35 +47,29 @@ function initMap() {
             const radioScaler = d3.scaleLinear().domain([min_trips_day, max_trips_day]).range([50, 300]);
             const colorScaler = d3.scaleLinear().domain([min_p_late, max_p_late]).range(['blue', 'red']);
 
-            console.log(colorScaler(stations[2].late));
-            console.log(colorScaler(stations[883].late));
-
-            for (var i=0; i<stations.length; i++) {
-
+            function addMarker(station) {
                 var stationCircle = new google.maps.Circle({
                     strokeWeight: 0,
-                    fillColor: colorScaler(stations[i].late),
+                    fillColor: colorScaler(station.late),
                     fillOpacity: 0.7,
                     map: map,
-                    center: stations[i].coords,
-                    radius: radioScaler(stations[i].size),
-                    content: stations[i].name
+                    center: station.coords,
+                    position: station.coords,
+                    radius: radioScaler(station.size),
+                    content: station.name
                 });
+                stationCircle.addListener('click', function () {
+                    var infoWindow = new google.maps.InfoWindow({
+                        content: station.name
+                    });
+                    infoWindow.open(map, stationCircle);
+                })
+                return stationCircle
+            }
 
-                var infoWindow = new google.maps.InfoWindow({
-                    content: stations[i].name
-                });
-
-                // google.maps.event.addListener(stationCircle, 'click', function(ev) {
-                //     console.log(stationCircle)
-                //     infoWindow.setPosition(ev.latLng);
-                //     infoWindow.open(map);
-                // });
-
-                google.maps.event.addListener(stationCircle, 'click', function(ev){
-                    infoWindow.setPosition(stationCircle.getCenter());
-                    infoWindow.open(map);
-                });
+            markers = [];
+            for (var i = 0; i < stations.length; i++) {
+                markers.push(addMarker(stations[i]))
             }
         });
 
@@ -100,7 +80,7 @@ function initMap() {
     //         console.log(latesByHour)
     //
     //     })
-    // for (var i=0; i< stations.length; i++) {
+    // for (var i = 0; i < stations.length; i++) {
     //     addMarker(stations[i]);
     // }
     //
