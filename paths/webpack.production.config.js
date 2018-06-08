@@ -49,7 +49,7 @@ module.exports = {
         new ExtractTextPlugin('main.css'),
         new CopyWebpackPlugin([
             { from: './src/index.html', to: 'index.html' },
-            { from: './src/main.scss', to: 'main.css' }
+            { from: './src/main.css', to: 'main.css' }
         ]),
     ]
 };
