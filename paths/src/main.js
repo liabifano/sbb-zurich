@@ -1,9 +1,10 @@
-const addr = 'ETHZ, Rämistrasse 101, 8092 Zürich';
 const mapCenter = {lat: 47.378177, lng: 8.540192};
 const mapZoom = 12;
 const stationsFile = '/resources/stations.csv';
-
+const keyMatrixDistance =;
+const keyGeoLoc = ;
 const humidityForSun = .5;
+const totalTime = 15*60;
 
 
 function initMap() {
@@ -110,11 +111,6 @@ function clearMarkers() {
     setMapOnAll(null);
 }
 
-function deleteMarkers() {
-    clearMarkers();
-    var markers = [];
-}
-
 
 var locationForm = document.getElementById('form');
 locationForm.addEventListener('submit', geocode);
@@ -181,6 +177,7 @@ function geocode(e) {
 
                                 const closestStation = filteredStations[distances.indexOf(Math.min.apply(Math, distances))];
                                 closestStation.timeToReachIt = Math.min.apply(Math, distances);
+                                const timeInTransit = totalTime - closestStation.timeToReachIt
 
                                 // addMarkerIcon({
                                 //     'lat': closestStation.lat,
@@ -202,7 +199,8 @@ function geocode(e) {
                                         'temperature': temperature,
                                         'weekday': weekday,
                                         'probability': probability,
-                                        'search': searchType
+                                        'search': searchType,
+                                        'time_in_transit': timeInTransit
                                     }
                                 ).then(function (response) {
                                     const paths = response.data['paths'];

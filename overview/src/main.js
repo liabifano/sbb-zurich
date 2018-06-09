@@ -21,19 +21,11 @@ function rowsConverterHour(d) {
     return {
         hour: parseInt(d.HOUR_OF_DAY),
         id: parseInt(d.BPUIC),
-        trips_hour: parseInt(d.total_count),
+        trips_hour: parseFloat(d.count),
         late: parseFloat(d.p_late)
     }
 }
 
-function sleep(milliseconds) {
-    var start = new Date().getTime();
-    for (var i = 0; i < 1e7; i++) {
-        if ((new Date().getTime() - start) > milliseconds) {
-            break;
-        }
-    }
-}
 
 function initMap() {
     const options = {
@@ -85,26 +77,19 @@ function initMap() {
 }
 
 
-var runButtonPress = document.getElementById('btn-run');
-runButtonPress.addEventListener('click', change);
+var locationForm = document.getElementById('form');
+locationForm.addEventListener('submit', change);
 
 
 function change(e) {
     e.preventDefault();
 
+    const inputedHour = document.getElementById('hour-input').value;
+
     d3.queue()
         .defer(d3.csv, stationsFile)
         .await(function (error, stations) {
             stations = stations.map(rowConverterStations);
-
-            const max_trips_day = math.max.apply(Math, stations.map(x => x.size));
-            const min_trips_day = math.min.apply(Math, stations.map(x => x.size));
-
-            const max_p_late = math.max.apply(Math, stations.map(x => x.late));
-            const min_p_late = math.min.apply(Math, stations.map(x => x.late));
-
-            var radioScaler = d3.scaleLinear().domain([min_trips_day, max_trips_day]).range([50, 300]);
-            var colorScaler = d3.scaleLinear().domain([min_p_late, max_p_late]).range(['blue', 'red']);
 
             d3.queue()
                 .defer(d3.csv, latesByHour)
@@ -121,25 +106,33 @@ function change(e) {
 
                             return {
                                 id: d.id,
-                                lateNow: (lates.length == 1) ? lates[0].late : 0,
-                                tripsNow: (lates.length == 1) ? lates[0].trips_hour : 0
+                                coords: d.coords,
+                                name: d.name,
+                                late: (lates.length == 1) ? lates[0].late : 0,
+                                size: (lates.length == 1) ? lates[0].trips_hour : 0
                             }
                         });
                         treatLatesByHour.push(mergedLatesNow);
                     }
 
-                    for (h = 0; h < 24; h++) {
-                        console.log(h)
-                        var latesNow = treatLatesByHour[h];
+                    const max_trips_hour = math.max.apply(Math, latesByHour.map(x => x.trips_hour));
+                    const min_trips_hour = math.min.apply(Math, latesByHour.map(x => x.trips_hour));
 
-                        for (i = 0; i < markers.length; i++) {
-                            markers[i].setOptions({
-                                radius: radioScaler(latesNow[i].tripsNow),
-                                fillColor: colorScaler(latesNow[i].lateNow)
-                            });
-                        }
-                        console.log()
-                    }
+                    const max_p_late = math.max.apply(Math, latesByHour.map(x => x.late));
+                    const min_p_late = math.min.apply(Math, latesByHour.map(x => x.late));
+
+                    var radioScaler = d3.scaleLinear().domain([min_trips_hour, max_trips_hour]).range([50, 300]);
+                    var colorScaler = d3.scaleLinear().domain([min_p_late, max_p_late]).range(['blue', 'red']);
+
+
+                    var latesNow = treatLatesByHour[inputedHour];
+
+                    markers.map(function (d, i) {
+                        d.setOptions({
+                            radius: radioScaler(latesNow[i].size),
+                            fillColor: colorScaler(latesNow[i].late)
+                        })
+                    });
                 });
         });
 

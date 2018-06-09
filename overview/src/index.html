@@ -12,13 +12,19 @@
     <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
     <script src=https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.3.0/math.min.js></script>
 
-    <button id="btn-run" type="run">
-        Run!
-    </button>
+    <form id="form">
+        <div id="all">
+            <div style="width:70px; float:left;">
+                <input type="text" id="hour-input" class="form-control form-control-lg" autocomplete="off">
+            </div>
+
+            <div style="width:50px; float:left;">
+                <button class="btn btn-primary" type="submit">Send</button>
+            </div>
+        </div>
+    </form>
 
     <script src="main.js"></script>
-
-
 
     <script async defer
          src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAEJQHAVwGEBbCwzXrk7imuyP8fgHYt2EU&callback=initMap">
